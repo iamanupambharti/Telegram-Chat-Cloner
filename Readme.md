@@ -43,6 +43,12 @@ api_hash → a long alphanumeric string
 File:
 Save the full bot code into a file like telegram_forwarder.py
 
+Providing API Credentials:
+The bot needs your Telegram API ID and API Hash to work. You can provide them in three ways:
+1. Environment Variables (Recommended): Set the TELEGRAM_API_ID and TELEGRAM_API_HASH environment variables. The bot will automatically use them.
+2. Interactive Prompt: If you haven't set environment variables, the bot will prompt you to enter your credentials the first time you run it.
+3. Session File: After you log in once, the bot creates a forward_bot_session.session file. This file stores your session, so you don't have to log in every time.
+
 Config file:
 The bot will automatically create a bot_config.json file to save:
 >Caption prefix & Counter

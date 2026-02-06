@@ -3,6 +3,7 @@ import asyncio
 import json
 import os
 import sys
+import subprocess
 
 try:
     from telethon import TelegramClient, events
@@ -83,9 +84,15 @@ def check_system_requirements():
         __import__('telethon')
         print_success("Telethon library is installed.")
     except ImportError:
-        print_error("Telethon library is not installed.")
-        print_info("Please install it by running: pip install telethon")
-        all_ok = False
+        print_error("Telethon library is not installed. Attempting to install...")
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "telethon"])
+            print_success("Telethon installed successfully.")
+            __import__('telethon') # Verify import after install
+        except Exception as e:
+            print_error(f"Failed to install Telethon: {e}")
+            print_info("Please try installing it manually: pip install telethon")
+            all_ok = False
 
     if not all_ok:
         print("\nPlease resolve the issues above and restart the tool.")
@@ -102,13 +109,13 @@ async def initialize_telegram_client():
     api_hash = None
 
     if os.path.exists(SESSION_FILE):
-        print_info("Existing session file found. Attempting to log in...")
+        print_info("Existing session file found. Login will be skipped if the session is valid.")
         # Use dummy values if session exists, Telethon doesn't need them to connect
         api_id = 12345
         api_hash = "dummy"
     else:
         print_info("Login is required for the first time.")
-        print_info("You can find your API credentials at my.telegram.org.")
+        print_info("You can find your API credentials at my.telegram.org (App API ID and Hash).")
         print_info("NOTE: Your input will be visible as you type.")
         try:
             api_id = int(os.environ.get("TELEGRAM_API_ID", input("Enter your API ID: ")))
@@ -125,10 +132,11 @@ async def initialize_telegram_client():
             # This block will run if the session is invalid or first-time login
             print_info("Session invalid or expired. Please log in.")
             if not all([api_id, api_hash]) or api_id == 12345: # Re-ask for credentials if they were dummy
-                 api_id = int(os.environ.get("TELEGRAM_API_ID", input("Re-enter your API ID: ")))
-                 api_hash = os.environ.get("TELEGRAM_API_HASH", input("Re-enter your API Hash: "))
-                 client = TelegramClient(SESSION_FILE, api_id, api_hash)
-                 await client.connect()
+                print_info("Please provide your API credentials again (from my.telegram.org).")
+                api_id = int(os.environ.get("TELEGRAM_API_ID", input("Re-enter your API ID: ")))
+                api_hash = os.environ.get("TELEGRAM_API_HASH", input("Re-enter your API Hash: "))
+                client = TelegramClient(SESSION_FILE, api_id, api_hash)
+                await client.connect()
 
             phone_number = input("Enter your phone number (e.g., +1234567890): ").strip()
             await client.send_code_request(phone_number)
