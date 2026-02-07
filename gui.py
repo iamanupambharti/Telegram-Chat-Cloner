@@ -8,25 +8,28 @@ def check_and_install_dependencies():
     Returns True if an installation was performed, False otherwise.
     """
     installed_something = False
-    dependencies = {
-        "customtkinter": "customtkinter",
-        "telethon": "telethon"
-    }
     
-    for module, package in dependencies.items():
+    try:
+        import customtkinter
+        import telethon
+    except ImportError:
+        print("ℹ️ Missing dependencies. Attempting to install from requirements.txt...")
         try:
-            __import__(module)
-        except ImportError:
-            print(f"ℹ️ {package} is not installed. Attempting to install...")
-            try:
-                subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-                print(f"✅ Successfully installed {package}.")
-                installed_something = True
-            except Exception as e:
-                print(f"❌ Failed to install {package}: {e}")
-                # If a crucial dependency fails, exit.
-                sys.exit(1)
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+            print("✅ Successfully installed dependencies.")
+            installed_something = True
+        except Exception as e:
+            print(f"❌ Failed to install dependencies: {e}")
+            sys.exit(1)
     
+    # After potential installation, verify they are now importable
+    try:
+        import customtkinter
+        import telethon
+    except ImportError:
+        print("❌ Dependencies still missing after installation attempt. Exiting.")
+        sys.exit(1)
+
     return installed_something
 
 # --- Main Application Logic ---

@@ -1,139 +1,186 @@
-📄 Telegram Auto Forwarder Bot 
+📄 Telegram Auto Forwarder Bot
 
 📌 Overview
-This Python bot allows you to automatically forward messages from one Telegram chat/group/channel to another. It supports two modes:
+This Python bot allows you to automatically forward messages from one Telegram chat/group/channel to another. It offers two main ways to interact:
 
-1.Original Caption Mode — forwards all messages exactly as-is.
-2.Custom Caption Mode — forwards only media files (videos, photos, PDFs, etc.) with a custom caption prefix + counter.
+1.  **Graphical User Interface (GUI):** A user-friendly windowed application for easy setup and management.
+2.  **Command Line Interface (CLI):** A console-based script for direct terminal interaction.
 
+Both versions support two forwarding modes:
+*   **Original Caption Mode:** Forwards all messages exactly as-is (including text, media, and their original captions).
+*   **Custom Caption Mode:** Forwards only media files (videos, photos, PDFs, etc.) and applies a custom caption composed of a user-defined prefix and an incrementing counter.
 
-It also saves settings like:
->>Source/destination chat IDs
->>Caption prefix
->>Counter for custom captions
+Settings like source/destination chat IDs, caption prefix, and the custom caption counter are automatically saved.
 
-⚙️1. Pre-configuration (Python & Libraries)
-✅Step 1: Install Python
-Make sure you have Python 3.8+ installed. You can check with:
+---
 
-bash
+⚙️ Setup & Installation
+
+✅ Step 1: Install Python
+Make sure you have Python 3.8+ installed. You can check your version with:
+
+```bash
 python --version
+```
+If not installed, download from: 🔗 https://www.python.org/downloads/
 
-If not installed, download from:
-🔗 https://www.python.org/downloads/
+✅ Step 2: Download the Project
+Clone this repository or download the project files to your local machine.
 
-✅ Step 2: Install Required Library
-Install Telethon, the Telegram API wrapper used in the bot:
+✅ Step 3: Install Required Libraries
+The project dependencies are listed in `requirements.txt`.
 
-pip install telethon
-🧾 2. Get Your Telegram API Credentials
-To use the Telegram API, you need your own api_id and api_hash.
+*   **For the GUI Application (`gui.py`):**
+    On the first run, the GUI application will **automatically detect and install all necessary Python libraries** if they are missing. You just need to run it (see "How to Run the Program" below).
+
+*   **For the CLI Application (`telegram_forwarder.py`):**
+    You need to manually install the dependencies once. Open your terminal in the project directory and run:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+🧾 Get Your Telegram API Credentials
+To use the Telegram API, you need your own `api_id` and `api_hash`.
 
 Steps:
-1>Go to: https://my.telegram.org.
-2>Log in with your phone number.
-3>Click API Development Tools.
-4>Fill the form with app name and description
+1.  Go to: https://my.telegram.org.
+2.  Log in with your phone number.
+3.  Click "API Development Tools".
+4.  Fill the form with your app name and a short description.
 
-You'll get:
-api_id → a number (usually 6–7 digits)
-api_hash → a long alphanumeric string
+You'll receive:
+*   `api_id` → a number (usually 6–7 digits)
+*   `api_hash` → a long alphanumeric string
 
-🗃️ 3. Folder & File Setup
-File:
-Save the full bot code into a file like telegram_forwarder.py
+These credentials are essential for the bot to connect to your Telegram account.
 
-Providing API Credentials:
+---
+
+🗃️ Configuration & Session Management
+
+**Providing API Credentials:**
 The bot needs your Telegram API ID and API Hash to work. You can provide them in three ways:
-1. Environment Variables (Recommended): Set the TELEGRAM_API_ID and TELEGRAM_API_HASH environment variables. The bot will automatically use them.
-2. Interactive Prompt: If you haven't set environment variables, the bot will prompt you to enter your credentials the first time you run it.
-3. Session File: After you log in once, the bot creates a forward_bot_session.session file. This file stores your session, so you don't have to log in every time.
+1.  **Environment Variables (Recommended):** Set `TELEGRAM_API_ID` and `TELEGRAM_API_HASH` environment variables. The bot will automatically use them.
+2.  **Interactive Prompt/GUI Input:** If you haven't set environment variables, the bot will prompt you to enter your credentials (via terminal for CLI, or a dedicated login screen for GUI) the first time you run it.
+3.  **Session File:** After you log in once, the bot creates a `forward_bot_session.session` file. This file securely stores your session, so you don't have to log in every time.
 
-Config file:
-The bot will automatically create a bot_config.json file to save:
->Caption prefix & Counter
->Source & destination channel/group IDs
+**Configuration File (`bot_config.json`):**
+The bot will automatically create a `bot_config.json` file to save:
+*   Caption prefix & Counter
+*   Source & destination channel/group IDs
+*   Your `api_id` and `api_hash` (if entered via prompt/GUI)
 
-🚀 4. How to Run the Program
-Run this from your terminal or command prompt:
-python telegram_forwarder.py
+This ensures your settings are persistent across runs.
 
-🤖 5. Mode Selection (At Runtime)
-On running, the bot asks:
+---
 
-"How do you want to forward messages?"
+🚀 How to Run the Program
 
-Option 1: Forward with original captions
-Forwards all message types exactly as-is (including plain text)
+### Running the GUI Application (Recommended)
 
-Useful for mirroring chat/group content
+This is the easiest way to use the bot.
 
-Option 2: Forward with custom captions
-Forwards only media messages.
+1.  Open your terminal or command prompt in the project directory.
+2.  Run the GUI script:
+    ```bash
+    python gui.py
+    ```
+3.  **First Run Experience:**
+    *   If dependencies are missing, it will automatically install them. The application might relaunch itself after installation.
+    *   You will be presented with a login screen to enter your `api_id` and `api_hash`.
+    *   Follow the on-screen prompts for phone number, verification code, and 2FA password (if enabled).
 
-Caption format: <prefix> <counter>
+### Running the CLI Application
 
-Example: Caption 1, Caption 2, etc.
-Skips text-only messages
+For terminal-only interaction.
 
-You will be asked:
-i. Do you want to change the caption prefix?
+1.  Ensure you have installed dependencies manually (see "Setup & Installation" above).
+2.  Open your terminal or command prompt in the project directory.
+3.  Run the CLI script:
+    ```bash
+    python telegram_forwarder.py
+    ```
+4.  Follow the interactive prompts in the terminal for login, mode selection, and chat configuration.
 
-ii. Do you want to reset the counter?
+---
 
-🔄 6. Source/Destination Setup
-You are asked every time:
+🤖 Using the Bot
 
-"Do you want to change source/destination group/channel?"
+### Login Process
+Whether you use the GUI or CLI, the bot will guide you through the Telegram login process if a session file (`forward_bot_session.session`) doesn't exist or is invalid. You will be asked for your phone number, the verification code sent to your Telegram app, and optionally your 2FA password.
 
-If yes:
-The bot will display all your joined Telegram groups/channels with their names and IDs.
-You copy the ID of the source and destination chats from the list and input them.
+### Mode Selection
+*   **GUI:** Use the radio buttons on the main screen to select "Original Caption" or "Custom Caption" mode.
+*   **CLI:** The bot will prompt you in the terminal to choose between the two modes.
 
-📦 7. What Gets Forwarded
-Mode	               Media Files (Videos, Photos, Docs)	Text-Only Messages	Captions
-Original Caption	✅ All forwarded	                ✅ All forwarded	Original
-Custom Caption   	✅ Only media with prefix + counter	❌ Skipped	         Custom
+### Custom Caption Settings (for Custom Caption Mode)
+*   **GUI:** Enter your desired prefix in the "Caption Prefix" field. You can reset the counter using the "Reset Counter" button.
+*   **CLI:** The bot will ask if you want to change the caption prefix or reset the counter.
 
-💾 8. What’s Stored in bot_config.json
+### Source/Destination Chat Selection
+*   **GUI:** Click "Fetch Chats" to populate the dropdown menus. Then, select your "Source" and "Destination" chats from the respective dropdowns.
+*   **CLI:** The bot will display a list of your chats with their IDs and ask you to input the source and destination chat IDs.
+
+---
+
+📦 What Gets Forwarded
+| Mode              | Media Files (Videos, Photos, Docs) | Text-Only Messages | Captions                     |
+| :---------------- | :--------------------------------- | :----------------- | :--------------------------- |
+| Original Caption  | ✅ All forwarded                   | ✅ All forwarded   | Original                     |
+| Custom Caption    | ✅ Only media with prefix + counter | ❌ Skipped         | Custom (`<prefix> <counter>`) |
+
+---
+
+💾 What’s Stored in `bot_config.json`
 Example:
+```json
 {
   "prefix": "UNIT AND DIMENSIONS",
   "count": 5,
   "source_channel": -10015455555,
-  "destination_channel": -100987554545
+  "destination_channel": -100987554545,
+  "api_id": 1234567,
+  "api_hash": "your_api_hash_here"
 }
+```
 This ensures:
-i. The counter picks up where it left off
-ii. Your channel settings are saved
+*   The counter picks up where it left off.
+*   Your channel settings are saved.
+*   Your `api_id` and `api_hash` are remembered (encrypted in `forward_bot_session.session` and optionally in `bot_config.json`).
 
-Only updated if you choose to change them.
+Only updated if you choose to change them or enter new API credentials.
 
-🔒 9. Session Management
-The first time you run the script, you'll be asked to log in using your Telegram account (code sent via Telegram).
+---
 
-A local file forward_bot_session.session is saved, so you don’t need to log in every time.
+🛑 Stop the Bot
 
-🛑 10. Stop the Bot
-To stop the bot (especially when it's listening for new messages):
->>Press CTRL + C in the terminal
+*   **GUI:** Click the "Stop Forwarding" button. You can also close the application window normally.
+*   **CLI:** Press `CTRL + C` in the terminal to stop the forwarding process.
 
->>This stops the real-time message handler
+---
 
-🧰 12. Advanced Notes
-i. If you need to clear the chat history of source or destination channel/group, you will get two options after forwarding is completed, if you want to clear the source or destination group/channel, Choose 'Y' otherwise 'N'  .   
-ii. You can run the bot on Windows, Linux, macOS or even a Raspberry Pi.
+🧰 Advanced Notes
 
-🧪Example Use Cases
-      Scenario	                           	            Mode to Use
-Backing up chat history	          			 Original Caption Mode
-Publishing study materials in order			 Custom Caption Mode
-Auto-forwarding notes from a group                  	Original Caption Mode
-Posting structured lessons/files to a channel		Custom Caption Mode
+*   **Clearing Chat History:** After forwarding is completed (or stopped), the bot will offer options to permanently delete ALL messages from the SOURCE and/or DESTINATION chats. Use with extreme caution!
+*   **Platform Compatibility:** The bot can run on Windows, Linux, macOS, or even a Raspberry Pi.
 
+---
+
+🧪 Example Use Cases
+| Scenario                                  | Mode to Use           |
+| :---------------------------------------- | :-------------------- |
+| Backing up chat history                   | Original Caption Mode |
+| Publishing study materials in order       | Custom Caption Mode   |
+| Auto-forwarding notes from a group        | Original Caption Mode |
+| Posting structured lessons/files to a channel | Custom Caption Mode   |
+
+---
 
 You can now:
-i. Start the bot with python telegram_forwarder.py
-ii. Select your preferred mode
-iii. Set up source/destination
-iv. Sit back and let the bot handle the rest!
+*   **For GUI:** Run `python gui.py` and follow the on-screen instructions.
+*   **For CLI:** Run `python telegram_forwarder.py` and follow the terminal prompts.
+
+Enjoy automated Telegram forwarding!
