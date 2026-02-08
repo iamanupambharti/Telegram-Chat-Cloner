@@ -1,44 +1,39 @@
 📄 Telegram Auto Forwarder Bot
 
 📌 Overview
-This Python bot allows you to automatically forward messages from one Telegram chat/group/channel to another. It offers two main ways to interact:
+This Python bot allows you to automatically forward messages from one Telegram chat/group/channel to another. It is built using the `telethon` library for Telegram API interaction and `customtkinter` for the Graphical User Interface (GUI).
+
+The bot offers two main ways to interact:
 
 1.  **Graphical User Interface (GUI):** A user-friendly windowed application for easy setup and management.
-2.  **Command Line Interface (CLI):** A console-based script for direct terminal interaction.
+2.  **Command Line Interface (CLI):** A console-based script (`telegram_forwarder.py`) for direct terminal interaction.
 
 Both versions support two forwarding modes:
 *   **Original Caption Mode:** Forwards all messages exactly as-is (including text, media, and their original captions).
 *   **Custom Caption Mode:** Forwards only media files (videos, photos, PDFs, etc.) and applies a custom caption composed of a user-defined prefix and an incrementing counter.
 
-Settings like source/destination chat IDs, caption prefix, and the custom caption counter are automatically saved.
+Configuration details such as source/destination chat IDs, custom caption prefixes, and the current counter are persisted in a `bot_config.json` file. The script also creates a `forward_bot_session.session` file to manage the user's Telegram session, avoiding the need to log in on every run.
 
 ---
 
 ⚙️ Setup & Installation
 
-✅ Step 1: Install Python
-Make sure you have Python 3.8+ installed. You can check your version with:
+### Prerequisites
 
-```bash
-python --version
-```
-If not installed, download from: 🔗 https://www.python.org/downloads/
+*   Python 3.8 or newer.
+*   Your own Telegram `api_id` and `api_hash`. You can obtain these by following the instructions at [my.telegram.org](https://my.telegram.org).
 
-✅ Step 2: Download the Project
-Clone this repository or download the project files to your local machine.
+### Installation
 
-✅ Step 3: Install Required Libraries
-The project dependencies are listed in `requirements.txt`.
+1.  **Download the Project:**
+    Clone this repository or download the project files to your local machine.
+    Navigate to the project directory in your terminal.
 
-*   **For the GUI Application (`gui.py`):**
-    On the first run, the GUI application will **automatically detect and install all necessary Python libraries** if they are missing. You just need to run it (see "How to Run the Program" below).
-
-*   **For the CLI Application (`telegram_forwarder.py`):**
-    You need to manually install the dependencies once. Open your terminal in the project directory and run:
-
-```bash
-pip install -r requirements.txt
-```
+2.  **Install Dependencies:** The project relies on `telethon` and `customtkinter` libraries. Install them using pip:
+    ```bash
+    pip install -r requirements.txt
+    ```
+    *Note: The GUI application (`gui.py`) might attempt to install missing dependencies automatically on first run, but it's recommended to install them manually via `requirements.txt` for consistency.*
 
 ---
 
@@ -97,13 +92,13 @@ This is the easiest way to use the bot.
 
 For terminal-only interaction.
 
-1.  Ensure you have installed dependencies manually (see "Setup & Installation" above).
+1.  Ensure you have installed dependencies (see "Setup & Installation" above).
 2.  Open your terminal or command prompt in the project directory.
 3.  Run the CLI script:
     ```bash
     python telegram_forwarder.py
     ```
-4.  Follow the interactive prompts in the terminal for login, mode selection, and chat configuration.
+    The first time you run it, you will be prompted to enter your phone number and a login code sent to you via Telegram. It will then guide you through an interactive setup process for selecting the mode and a source/destination chats.
 
 ---
 
