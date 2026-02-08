@@ -198,26 +198,51 @@ class LoginFrame(ctk.CTkFrame):
         )
 
     async def _async_login(self, api_id, api_hash):
-        async def get_input_from_gui(prompt, title):
+        async def get_input_from_gui(prompt, title, hide_input=False):
             future = asyncio.Future()
-            # This runs on the main GUI thread via app.after(0, ...)
-            def show_dialog():
-                dialog = ctk.CTkInputDialog(text=prompt, title=title)
-                user_input = dialog.get_input()
-                self.parent.async_loop.call_soon_threadsafe(future.set_result, user_input)
 
+            def show_dialog():
+                dialog = ctk.CTkToplevel(self.parent)
+                dialog.title(title)
+                dialog.geometry("300x150")
+                dialog.transient(self.parent)  # Make dialog transient for the main app window
+                dialog.grab_set()  # Make dialog modal
+
+                label = ctk.CTkLabel(dialog, text=prompt)
+                label.pack(pady=10)
+
+                entry = ctk.CTkEntry(dialog, show="*" if hide_input else "")
+                entry.pack(pady=5)
+                entry.focus_set()
+
+                def on_ok():
+                    user_input = entry.get()
+                    self.parent.async_loop.call_soon_threadsafe(future.set_result, user_input)
+                    dialog.destroy()
+
+                def on_cancel():
+                    self.parent.async_loop.call_soon_threadsafe(future.set_exception, Exception("Input dialog cancelled"))
+                    dialog.destroy()
+                
+                ok_button = ctk.CTkButton(dialog, text="OK", command=on_ok)
+                ok_button.pack(side="left", expand=True, padx=5, pady=10)
+
+                cancel_button = ctk.CTkButton(dialog, text="Cancel", command=on_cancel)
+                cancel_button.pack(side="right", expand=True, padx=5, pady=10)
+
+                dialog.protocol("WM_DELETE_WINDOW", on_cancel) # Handle window close button
+                
             self.parent.after(0, show_dialog)
-            # Wait for the result from the GUI thread
             return await future
 
         async def get_phone():
             return await get_input_from_gui("Enter your phone number:", "Phone Number")
 
         async def get_code():
-            return await get_input_from_gui("Enter the code you received:", "Verification Code")
+            return await get_input_from_gui("Enter the code you received:", "Verification Code", hide_input=True)
 
         async def get_password():
-            return await get_input_from_gui("Enter your 2FA password:", "Password")
+            return await get_input_from_gui("Enter your 2FA password:", "Password", hide_input=True)
 
         # Save credentials to config for persistence
         self.parent.config['api_id'] = api_id

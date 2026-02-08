@@ -29,11 +29,11 @@ Configuration details such as source/destination chat IDs, custom caption prefix
     Clone this repository or download the project files to your local machine.
     Navigate to the project directory in your terminal.
 
-2.  **Install Dependencies:** The project relies on `telethon` and `customtkinter` libraries. Install them using pip:
+2.  **Install Dependencies:** The project relies on `telethon` and `customtkinter` libraries. Run the `requirements.py` script to install them:
     ```bash
-    pip install -r requirements.txt
+    python requirements.py
     ```
-    *Note: The GUI application (`gui.py`) might attempt to install missing dependencies automatically on first run, but it's recommended to install them manually via `requirements.txt` for consistency.*
+    *Note: The GUI application (`gui.py`) might attempt to install missing dependencies automatically on first run, but it's recommended to run `python requirements.py` for consistency.*
 
 ---
 
